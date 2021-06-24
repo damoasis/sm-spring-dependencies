@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <version>2.4.3</version>
+    </parent>
+    <groupId>com.github.shamoasis</groupId>
+    <artifactId>sm-spring-dependencies</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <revision>1.0-SNAPSHOT</revision>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <spring-booot.version>2.4.3</spring-booot.version>
+        <spring-cloud.version>2020.0.2</spring-cloud.version>
+        <spring-cloud.alibaba.version>2021.1</spring-cloud.alibaba.version>
+        <mybatis-starter.version>2.1.3</mybatis-starter.version>
+        <mybatis.mapper.version>4.1.5</mybatis.mapper.version>
+        <mapper-spring-boot-starter.version>2.1.5</mapper-spring-boot-starter.version>
+        <mysql.version>5.1.48</mysql.version>
+        <druid-starter.version>1.2.4</druid-starter.version>
+        <mybatis-typehandlers.version>1.0.2</mybatis-typehandlers.version>
+        <fastjson.version>1.2.76</fastjson.version>
+        <lombok.version>1.18.20</lombok.version>
+        <hibernate-validator.version>6.0.1.Final</hibernate-validator.version>
+        <spring-cloud-oauth2.version>2.2.4.RELEASE</spring-cloud-oauth2.version>
+        <spring-cloud-oauth2-server.version>5.4.6</spring-cloud-oauth2-server.version>
+        <seata.version>1.4.1</seata.version>
+        <mybatis-generator-plugin.version>1.4.0</mybatis-generator-plugin.version>
+        <mysql.version>5.1.48</mysql.version>
+        <tk.mapper.version>4.1.5</tk.mapper.version>
+        <mybatis-plus.version>3.4.2</mybatis-plus.version>
+        <fastjson.version>1.2.76</fastjson.version>
+        <caffeine.version>2.9.1</caffeine.version>
+        <flowable.version>6.6.0</flowable.version>
+        <skywalking-toolkit-logback.version>8.5.0</skywalking-toolkit-logback.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <jose4j.version>0.6.5</jose4j.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>alimaven</id>
+            <name>aliyun maven</name>
+            <url>http://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud.alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+                <exclusions>
+                    <!-- 排除依赖 指定版本和服务器端一致 -->
+                    <exclusion>
+                        <groupId>io.seata</groupId>
+                        <artifactId>seata-all</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.seata</groupId>
+                        <artifactId>seata-spring-boot-starter</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-booot.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-oauth2 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-oauth2</artifactId>
+                <version>${spring-cloud-oauth2.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-resource-server -->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-oauth2-resource-server</artifactId>
+                <version>${spring-cloud-oauth2-server.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/io.seata/seata-spring-boot-starter -->
+            <dependency>
+                <groupId>io.seata</groupId>
+                <artifactId>seata-spring-boot-starter</artifactId>
+                <version>${seata.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.seata</groupId>
+                <artifactId>seata-all</artifactId>
+                <version>${seata.version}</version>
+            </dependency>
+
+
+            <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-starter.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>tk.mybatis</groupId>
+                <artifactId>mapper</artifactId>
+                <version>${mybatis.mapper.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/tk.mybatis/mapper-spring-boot-starter -->
+            <dependency>
+                <groupId>tk.mybatis</groupId>
+                <artifactId>mapper-spring-boot-starter</artifactId>
+                <version>${mapper-spring-boot-starter.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-typehandlers-jsr310 -->
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-typehandlers-jsr310</artifactId>
+                <version>${mybatis-typehandlers.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+
+            <!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid-starter.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine -->
+            <!-- 3.0版本需要jdk11-->
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
+
+            <!--flowable-->
+            <!-- https://mvnrepository.com/artifact/org.flowable/flowable-spring-boot-starter -->
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-spring-boot-starter</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.flowable/flowable-spring-boot-starter-rest -->
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-spring-boot-starter-rest</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.flowable/flowable-idm-api -->
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-idm-api</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.flowable/flowable-idm-engine -->
+            <dependency>
+                <groupId>org.flowable</groupId>
+                <artifactId>flowable-idm-engine</artifactId>
+                <version>${flowable.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.apache.skywalking/apm-toolkit-logback-1.x -->
+            <dependency>
+                <groupId>org.apache.skywalking</groupId>
+                <artifactId>apm-toolkit-logback-1.x</artifactId>
+                <version>${skywalking-toolkit-logback.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.bitbucket.b_c/jose4j -->
+            <dependency>
+                <groupId>org.bitbucket.b_c</groupId>
+                <artifactId>jose4j</artifactId>
+                <version>${jose4j.version}</version>
+            </dependency>
+
+
+        </dependencies>
+
+
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.mybatis.generator</groupId>
+                    <artifactId>mybatis-generator-maven-plugin</artifactId>
+                    <version>${mybatis-generator-plugin.version}</version>
+                    <configuration>
+                        <configurationFile>src/main/resources/generatorMapper.xml</configurationFile>
+                        <overwrite>true</overwrite>
+                        <verbose>true</verbose>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>mysql</groupId>
+                            <artifactId>mysql-connector-java</artifactId>
+                            <version>${mysql.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>tk.mybatis</groupId>
+                            <artifactId>mapper</artifactId>
+                            <version>${tk.mapper.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!--install/deploy后，maven会将该module的pom文件中的${revision}替换为实际的版本号，轻松解决pom中版本号的问题-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.1.0</version>
+                <configuration>
+                    <!--是否更新pom文件，记得设置为true，不然无法更新module里的pom版本号-->
+                    <!--此处还有更高级的用法，具体下方的参考文档-->
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+        <resources>
+            <!-- 解决idea下xml文件的编译打包问题 -->
+            <resource>
+                <filtering>true</filtering>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
+
+</project>
