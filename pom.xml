@@ -63,6 +63,14 @@
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
+         
+    <distributionManagement>
+      <repository>
+        <id>github</id>
+        <name>GitHub Packages</name>
+        <url>https://maven.pkg.github.com/shamoasis/sm-spring-dependencies</url>
+      </repository>
+  </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
