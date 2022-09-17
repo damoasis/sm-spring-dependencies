@@ -33,7 +33,6 @@
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
         <fastjson.version>2.0.13</fastjson.version>
         <lombok.version>1.18.24</lombok.version>
-        <hibernate-validator.version>7.0.5.Final</hibernate-validator.version>
         <spring-cloud-oauth2.version>2.2.4.RELEASE</spring-cloud-oauth2.version>
         <spring-cloud-oauth2-server.version>5.4.6</spring-cloud-oauth2-server.version>
         <seata.version>1.4.2</seata.version>
@@ -98,12 +97,6 @@
                         <artifactId>seata-spring-boot-starter</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>org.hibernate.validator</groupId>
-                <artifactId>hibernate-validator</artifactId>
-                <version>${hibernate-validator.version}</version>
             </dependency>
 
             <dependency>
