@@ -26,7 +26,7 @@
         <mybatis.mapper.version>4.1.5</mybatis.mapper.version>
         <mapper-spring-boot-starter.version>2.1.5</mapper-spring-boot-starter.version>
         <mysql.version>5.1.48</mysql.version>
-        <druid-starter.version>1.2.12</druid-starter.version>
+        <druid-starter.version>1.2.11</druid-starter.version>
         <mybatis-typehandlers.version>1.0.2</mybatis-typehandlers.version>
         <mybatis-generator-plugin.version>1.4.0</mybatis-generator-plugin.version>
         <tk.mapper.version>4.1.5</tk.mapper.version>
@@ -42,13 +42,14 @@
         <skywalking-toolkit-logback.version>8.5.0</skywalking-toolkit-logback.version>
         <jjwt.version>0.9.1</jjwt.version>
         <jose4j.version>0.6.5</jose4j.version>
+        <hibernate-validator.version>6.2.5.Final</hibernate-validator.version>
     </properties>
 
     <repositories>
         <repository>
             <id>alimaven</id>
             <name>aliyun maven</name>
-            <url>http://maven.aliyun.com/repository/public</url>
+            <url>https://maven.aliyun.com/repository/public</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -247,7 +248,11 @@
                 <artifactId>jose4j</artifactId>
                 <version>${jose4j.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
+            </dependency>
 
         </dependencies>
 
