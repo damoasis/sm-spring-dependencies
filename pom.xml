@@ -26,7 +26,7 @@
         <mybatis.mapper.version>4.1.5</mybatis.mapper.version>
         <mapper-spring-boot-starter.version>2.1.5</mapper-spring-boot-starter.version>
         <mysql.version>5.1.48</mysql.version>
-        <druid-starter.version>1.2.11</druid-starter.version>
+        <druid-spring-boot-starter>1.2.11</druid-spring-boot-starter>
         <mybatis-typehandlers.version>1.0.2</mybatis-typehandlers.version>
         <mybatis-generator-plugin.version>1.4.0</mybatis-generator-plugin.version>
         <tk.mapper.version>4.1.5</tk.mapper.version>
@@ -43,6 +43,17 @@
         <jose4j.version>0.6.5</jose4j.version>
         <hibernate-validator.version>6.2.5.Final</hibernate-validator.version>
         <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
+        <githook-maven-plugin.version>1.0.5</githook-maven-plugin.version>
+        <spotbugs.disable.checks>false</spotbugs.disable.checks>
+        <spotbugs-maven-plugin.version>4.5.2.0</spotbugs-maven-plugin.version>
+        <spotbug.version>4.5.2</spotbug.version>
+        <spotbugs.exclude.filter.file>spotbugs/spotbugs-exclude.xml</spotbugs.exclude.filter.file>
+        <maven-checkstyle-plugin.version>3.2.0</maven-checkstyle-plugin.version>
+        <maven-pmd-plugin.version>3.14.0</maven-pmd-plugin.version>
+        <pmd.disable.checks>false</pmd.disable.checks>
+        <p3c-pmd.version>2.1.1</p3c-pmd.version>
+        <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
+        <screw-maven-plugin.version>1.0.5</screw-maven-plugin.version>
     </properties>
 
     <repositories>
@@ -173,7 +184,7 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
-                <version>${druid-starter.version}</version>
+                <version>${druid-spring-boot-starter}</version>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/caffeine -->
@@ -259,6 +270,102 @@
     <build>
         <pluginManagement>
             <plugins>
+                <!-- git hooks -->
+                <plugin>
+                    <groupId>io.github.phillipuniverse</groupId>
+                    <artifactId>githook-maven-plugin</artifactId>
+                    <version>${githook-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>install</goal>
+                            </goals>
+                            <configuration>
+                                <hooks>
+                                    <!-- 注意这里是调用shell命令去执行mvn命令，默认生成的hook文件执行路径可能与项目的pom.xml文件不一致，所以我这里用`-f`重新指定了本项目的pom文件路径 -->
+                                    <!-- exec mvn clean install -f 40_source//你的项目文件夹//pom.xml-->
+                                    <pre-commit>
+                                        echo running validation build
+                                        exec mvn clean compile
+                                    </pre-commit>
+                                </hooks>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${maven-checkstyle-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>checkstyle-validation</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <configuration>
+                                <!-- Checkstyle rules inherited from spring-cloud-build -->
+                                <suppressionsLocation>
+                                    ${maven.multiModuleProjectDirectory}/eclipse/checkstyle-suppressions.xml
+                                </suppressionsLocation>
+                                <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                                <consoleOutput>true</consoleOutput>
+                                <failsOnError>true</failsOnError>
+                                <failOnViolation>true</failOnViolation>
+                                <violationSeverity>warning</violationSeverity>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!--定制化打包-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${maven-assembly-plugin.version}</version>
+                    <configuration>
+                        <descriptorRefs>
+                            <descriptorRef>jar-with-dependencies</descriptorRef>
+                        </descriptorRefs>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>package</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>install</id>
+                            <phase>install</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- 聚合各子模块JavaDoc生成汇总doc文件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                    <inherited>false</inherited>
+                    <configuration>
+                        <aggregate>true</aggregate>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>aggregate</id>
+                            <goals>
+                                <goal>aggregate-jar</goal>
+                            </goals>
+                            <phase>package</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- 生成mapper文件 -->
                 <plugin>
                     <groupId>org.mybatis.generator</groupId>
                     <artifactId>mybatis-generator-maven-plugin</artifactId>
@@ -281,6 +388,201 @@
                         </dependency>
                     </dependencies>
                 </plugin>
+                <!-- 检测代码bug spotbugs-->
+                <plugin>
+                    <groupId>com.github.spotbugs</groupId>
+                    <artifactId>spotbugs-maven-plugin</artifactId>
+                    <version>${spotbugs-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>spotbugs-check-verify</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>spotbugs-spotbugs-site</id>
+                            <phase>site</phase>
+                            <goals>
+                                <goal>spotbugs</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <skip>${spotbugs.disable.checks}</skip>
+                        <excludeFilterFile>${spotbugs.exclude.filter.file}</excludeFilterFile>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.github.spotbugs</groupId>
+                            <artifactId>spotbugs</artifactId>
+                            <version>${spotbug.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <!--检测代码测试覆盖率的插件 jacoco-->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco-maven-plugin.version}</version>
+                    <configuration>
+                        <append>true</append>
+                        <rules>
+                            <rule implementation="org.jacoco.maven.RuleConfiguration">
+                                <element>BUNDLE</element>
+                                <limits>
+                                    <!-- 指定方法覆盖到80% -->
+                                    <limit implementation="org.jacoco.report.check.Limit">
+                                        <counter>METHOD</counter>
+                                        <value>COVEREDRATIO</value>
+                                        <minimum>0.50</minimum>
+                                    </limit>
+                                    <!-- 指定指令覆盖到80% -->
+                                    <limit implementation="org.jacoco.report.check.Limit">
+                                        <counter>INSTRUCTION</counter>
+                                        <value>COVEREDRATIO</value>
+                                        <minimum>0.40</minimum>
+                                    </limit>
+                                    <!-- 指定行覆盖到80% -->
+                                    <limit implementation="org.jacoco.report.check.Limit">
+                                        <counter>LINE</counter>
+                                        <value>COVEREDRATIO</value>
+                                        <minimum>0.40</minimum>
+                                    </limit>
+                                    <!-- 指定类覆盖到100%，不能遗失任何类 -->
+                                    <limit implementation="org.jacoco.report.check.Limit">
+                                        <counter>CLASS</counter>
+                                        <value>MISSEDCOUNT</value>
+                                        <maximum>0</maximum>
+                                    </limit>
+
+                                </limits>
+                            </rule>
+                        </rules>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>jacoco-initialize</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                            <phase>test-compile</phase>
+                        </execution>
+                        <execution>
+                            <id>jacoco-site</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- 静态源代码分析器。它发现了常见的编程缺陷，如未使用的变量、空捕获块、不必要的对象创建等等 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>${maven-pmd-plugin.version}</version>
+                    <configuration>
+                        <skip>${pmd.disable.checks}</skip>
+                        <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+                        <targetJdk>${java.version}</targetJdk>
+                        <minimumTokens>120</minimumTokens>
+                        <printFailingErrors>true</printFailingErrors>
+                        <excludes>**/benchmark/jmh_generated/**.java</excludes>
+                        <rulesets>
+                            <ruleset>rulesets/java/ali-comment.xml</ruleset>
+                            <ruleset>rulesets/java/ali-concurrent.xml</ruleset>
+                            <ruleset>rulesets/java/ali-constant.xml</ruleset>
+                            <ruleset>rulesets/java/ali-exception.xml</ruleset>
+                            <ruleset>rulesets/java/ali-flowcontrol.xml</ruleset>
+                            <ruleset>rulesets/java/ali-naming.xml</ruleset>
+                            <ruleset>rulesets/java/ali-oop.xml</ruleset>
+                            <ruleset>rulesets/java/ali-orm.xml</ruleset>
+                            <ruleset>rulesets/java/ali-other.xml</ruleset>
+                            <ruleset>rulesets/java/ali-set.xml</ruleset>
+                        </rulesets>
+                        <!--扫描级别，小于等于这个级别的错误代码将不通过扫描。不配默认是5（这里不推荐使用默认的，否则任何一个规则校验不通过都不允许提交，推荐配置成1，否则可能会出现经常因不满足规则校验而无法提交的情况->当然也可以重新梳理一下规则配置，自定义本团队的规则级别）-->
+                        <minimumPriority>1</minimumPriority>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>pmd-check-verify</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>pmd-pmd-site</id>
+                            <phase>site</phase>
+                            <goals>
+                                <goal>pmd</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.alibaba.p3c</groupId>
+                            <artifactId>p3c-pmd</artifactId>
+                            <version>${p3c-pmd.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <!--screw- 生成数据库文档 -->
+                <plugin>
+                    <groupId>cn.smallbun.screw</groupId>
+                    <artifactId>screw-maven-plugin</artifactId>
+                    <version>${screw-maven-plugin.version}</version>
+                    <dependencies>
+                        <!-- HikariCP -->
+                        <dependency>
+                            <groupId>com.zaxxer</groupId>
+                            <artifactId>HikariCP</artifactId>
+                            <version>3.4.5</version>
+                        </dependency>
+                        <!-- mysql driver-->
+                        <dependency>
+                            <groupId>mysql</groupId>
+                            <artifactId>mysql-connector-java</artifactId>
+                            <version>8.0.20</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <!--username-->
+                        <username>${screw.username}</username>
+                        <!--password-->
+                        <password>${screw.password}</password>
+                        <!--jdbc url-->
+                        <jdbcUrl>${screw.jdbcurl}</jdbcUrl>
+                        <!--driver-->
+                        <driverClassName>com.mysql.cj.jdbc.Driver</driverClassName>
+                        <!--生成文件类型:HTML,WORD-->
+                        <fileType>WORD</fileType>
+                        <!--打开文件输出目录-->
+                        <openOutputDir>false</openOutputDir>
+                        <!--生成模板-->
+                        <produceType>freemarker</produceType>
+                        <!--文档名称 为空时:将采用[数据库名称-描述-版本号]作为文档名称-->
+                        <!--                        <fileName>测试文档名称</fileName>-->
+                        <!--描述-->
+                        <description>数据库文档生成</description>
+                        <!--版本-->
+                        <version>${project.version}</version>
+                        <!--标题-->
+                        <title>数据库文档</title>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>install</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
             </plugins>
         </pluginManagement>
         <plugins>
@@ -303,6 +605,10 @@
                     <forkCount>1</forkCount>
                     <reuseForks>false</reuseForks>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
             <!--install/deploy后，maven会将该module的pom文件中的${revision}替换为实际的版本号，轻松解决pom中版本号的问题-->
             <plugin>
