@@ -606,10 +606,6 @@
                     <reuseForks>false</reuseForks>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-            </plugin>
             <!--install/deploy后，maven会将该module的pom文件中的${revision}替换为实际的版本号，轻松解决pom中版本号的问题-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
